@@ -1,10 +1,10 @@
 $(function () {
     Todo = Backbone.Model.extend({
         defaults: function(){
+            console.log(1)
             return {
                 title: 'empty todo...',
-                done: false,
-                order: Todos.nextOrder()
+                done: false
             }
         },
 
@@ -15,7 +15,8 @@ $(function () {
 
     TodoList = Backbone.Collection.extend({
         model: Todo,
-        localStorage: new Backbone.LocalStorage('todos-backbone'),
+        // localStorage: new Backbone.LocalStorage('todos-backbone'),
+        url: '/todos/',
 
         done: function () {
             return this.where({done: true})
@@ -27,10 +28,10 @@ $(function () {
 
         nextOrder: function () {
             if(!this.length) return 1
-            return this.last().order + 1
+            return this.last().get('id') + 1
         },
 
-        comparator: 'order'
+        comparator: 'id'
     })
 
     var Todos = new TodoList
@@ -60,7 +61,7 @@ $(function () {
         },
         edit: function () {
             this.$el.addClass('editing')
-            this.inut.focus()
+            this.input.focus()
         },
         clear: function () {
             this.model.destroy()
